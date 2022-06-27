@@ -2,6 +2,8 @@ const { createCanvas, loadImage } = require('canvas');
 const { writeFile } = require('node:fs/promises');
 const { join } = require('node:path');
 
+const font = 'Inter';
+
 (async () => {
   let input;
   try {
@@ -44,15 +46,15 @@ const { join } = require('node:path');
   // TITLE
   const title = input.title.split('/');
   context.fillStyle = '#ffffff';
-  context.font = 'bold 30pt Roboto';
+  context.font = `bold 38pt ${font}`;
   const firstWith = context.measureText(title[0]).width;
-  context.fillText(title[0], 100, 170);
-  context.font = 'normal 30pt Roboto';
-  context.fillText(`/${title[1]}`, 100 + firstWith, 170);
+  context.fillText(title[0], 100, 205);
+  context.font = `normal 38pt ${font}`;
+  context.fillText(`/${title[1]}`, 100 + firstWith, 205);
 
-  // DESCRIPTION
-  context.font = 'light 15pt Roboto';
-  context.fillText(input.description, 100, 210);
+  // DESCRIPTION;
+  context.font = `extralight 21pt ${font}`;
+  context.fillText(input.description, 100, 240);
 
   // TAGS
   let row = 0,
@@ -64,12 +66,12 @@ const { join } = require('node:path');
     const _context = _canvas.getContext('2d');
     _context.fillStyle = '#ffffff';
     roundRect(_context, 1, 1, tagWith, tagHeight, 10);
-    const x = 100 + filledTags * (tagWith + 12);
-    const y = 340 + row * (tagHeight + 17);
+    const x = 100 + filledTags * (tagWith + 24);
+    const y = 340 + row * (tagHeight + 18);
 
-    const fontSize = '18';
+    const fontSize = '17';
     _context.fillStyle = '#ff0000';
-    _context.font = `italic bold ${18}pt Roboto`;
+    _context.font = `${fontSize}pt 'Panton Black italic Caps'`;
     _context.globalCompositeOperation = 'xor';
     _context.textAlign = 'center';
     _context.fillText(
