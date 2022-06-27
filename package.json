@@ -1,0 +1,27 @@
+{
+  "name": "socialpreviewmaker",
+  "version": "1.0.0",
+  "description": "Simple app to create GitHub social preview images",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Solar-Tweaks/SocialPreviewMaker.git"
+  },
+  "keywords": [
+    "canvas",
+    "social"
+  ],
+  "author": "RichardDorian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Solar-Tweaks/SocialPreviewMaker/issues"
+  },
+  "homepage": "https://github.com/Solar-Tweaks/SocialPreviewMaker#readme",
+  "dependencies": {
+    "canvas": "^2.9.3"
+  }
+}
