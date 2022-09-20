@@ -1,33 +1,27 @@
 const { createCanvas, loadImage } = require('canvas');
 const { writeFile } = require('node:fs/promises');
 const { join } = require('node:path');
-
+const fetch = require('node-fetch')
 const font = 'Inter';
 
 (async () => {
   let input;
   try {
     input = {
-      title: process.argv
-        .find((v) => v.startsWith('--title='))
-        .replace('--title=', ''),
-      description: process.argv
-        .find((v) => v.startsWith('--description='))
-        .replace('--description=', '')
-        .replaceAll('\\\\n', '\n'),
-      tags: process.argv
-        .find((v) => v.startsWith('--tags='))
-        .replace('--tags=', '')
-        .split(','),
+      repo: process.argv
+        .find((v) => v.startsWith('--repo='))
+        .replace('--repo=', ''),
     };
   } catch (error) {
     console.error(error);
     console.error(
-      '\nAn error occured while reading input\nUsage: npm start -- --title=<YOUR TITLE> --description=<YOUR DESCRIPTION> --tags=<COMMA SEPARATED TAGS>\nExample: npm start --title=Solar-Tweaks/SocialPreviewMaker "--description=Simple app to create GitHub\\nsocial preview images" --tags=canvas,social\n\nMake sure to escape spaces correctly!'
+      '\nAn error occured while reading input\nUsage: npm start -- --repo=<full repo name>\nExample: npm start -- --repo=Solar-Tweaks/SocialPreviewMaker\n\nMake sure to escape spaces correctly!'
     );
     process.exit(1);
   }
 
+
+  const info = (await (await fetch("https://api.github.com/repos/"+input.repo)).json())
   // That's what GitHub recommends
   const width = 1280,
     height = 640;
@@ -44,7 +38,7 @@ const font = 'Inter';
   context.drawImage(logo, (width * 70) / 100, height / 2 - 270 / 2, 270, 270);
 
   // TITLE
-  const title = input.title.split('/');
+  const title = info.full_name.split("/");
   context.fillStyle = '#ffffff';
   context.font = `bold 38pt ${font}`;
   const firstWith = context.measureText(title[0]).width;
@@ -54,14 +48,14 @@ const font = 'Inter';
 
   // DESCRIPTION;
   context.font = `extralight 21pt ${font}`;
-  context.fillText(input.description, 100, 240);
+  context.fillText(formatDesc(info.description), 100, 240);
 
   // TAGS
   let row = 0,
     filledTags = 0;
   const tagWith = 170,
     tagHeight = 40;
-  for (const tag of input.tags) {
+  for (const tag of info.topics) {
     const _canvas = createCanvas(tagWith + 2, tagHeight + 2);
     const _context = _canvas.getContext('2d');
     _context.fillStyle = '#ffffff';
@@ -124,4 +118,19 @@ function roundRect(context, x, y, w, h, radius) {
   context.lineTo(x, y + radius);
   context.quadraticCurveTo(x, y, x + radius, y);
   context.stroke();
+}
+
+function formatDesc(desc) {
+  // I KNOW THIS IS DUMB STOP
+  let newStr = ""
+  let i = 0
+  desc.split(" ").forEach((a) => {
+    i++
+    newStr += " "+a
+    if(i > 6) {
+      newStr += "\n"
+      i = 0
+    }
+  })
+  return newStr
 }
